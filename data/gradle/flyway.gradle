@@ -1,0 +1,2 @@
+task up 
+up.dependsOn flywayClean, flywayMigrate

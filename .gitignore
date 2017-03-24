@@ -1,0 +1,57 @@
+# IDEA
+.idea/
+!.idea/runConfigurations/**
+out/
+**/build/
+*.iml
+**/*.iml
+esp.ipr
+esp.iws
+**/target/
+
+# NetBeans
+/.nb-gradle/private/
+
+# Vagrant
+.vagrant/
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Java
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.swp
+*.rpm
+
+# virtual machine crash logs
+hs_err_pid*
+
+#Gradle
+.gradle/
+!gradle/wrapper/**
+.gradletasknamecache
+
+# ansible artifacts directories
+environment/deployment/ansible/playbooks/roles/**/files
+
+# logs
+*.log
+**/*.log*
+
+node_modules
+**bower_components**
+/client/admin/.sass-cache
+/client/admin/application/vendor
+
+server/src/main/resources/assets/admin
+/.settings/
+/.project
+/.gradle/
+server/tmp/**
+/classes/

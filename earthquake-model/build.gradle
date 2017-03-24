@@ -1,0 +1,19 @@
+apply from: "${rootDir}/gradle/java-defaults.gradle"
+
+description = 'Model classes for Earthquake earthquakes'
+
+dependencies {
+    compile(
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "com.fasterxml.jackson.core:jackson-core:$jacksonVersion",
+            "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
+            "javax.validation:validation-api:1.1.0.Final",
+            "org.hibernate:hibernate-validator:5.2.4.Final",
+            "com.google.guava:guava:$guavaVersion",
+    )
+
+    testCompile(
+            project(':earthquake-model:earthquake-model-fixture').sourceSets.test.output
+    )
+}
+

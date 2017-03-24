@@ -1,0 +1,70 @@
+// Load mysql driver to use in build script
+configurations { driver }
+
+dependencies {
+    driver "mysql:mysql-connector-java:$mysqlConnectorVersion"
+}
+
+URLClassLoader loader = GroovyObject.class.classLoader
+configurations.driver.each {File file ->
+    loader.addURL(file.toURL())
+}
+
+import groovy.sql.Sql
+import java.sql.SQLException
+
+task mysqlReady {
+    group = 'docker'
+    description = 'Validates mysql on docker host ip or localhost is up'
+
+    ext.hostname = System.getenv('DOCKER_HOST_IP') ?: 'mysql'
+    ext.port = 3306
+    ext.user = 'devusr'
+    ext.password = 'ab1234'
+    ext.timeoutMillis = 1000
+    ext.retries = 10
+
+    doLast {
+        def connectionSuccessful = false, connectionAttempts = 0
+
+        while (!connectionSuccessful && connectionAttempts < retries) {
+            connectionAttempts++
+
+            try {
+                Sql.withInstance(
+                        "jdbc:mysql://$hostname:$port/mysql?connectTimeout=$timeoutMillis&socketTimeout=$timeoutMillis",
+                        [user: user, password: password] as Properties,
+                        'com.mysql.jdbc.Driver') { sql ->
+                    connectionSuccessful = sql.execute("SELECT 1")
+                }
+            } catch (SQLException exception) {
+                logger.error("Failed attempt $connectionAttempts to $hostname:$port Error: $exception, Cause: ${exception.cause}")
+
+                if (fatal(exception))
+                    break
+            }
+        }
+
+        logger.quiet("${connectionSuccessful ? "" : "Not "}Connected to mysql $hostname:$port after $connectionAttempts attempts")
+    }
+}
+
+private boolean fatal(SQLException exception) {
+    switch (exception.cause) {
+        case UnknownHostException:
+            return true
+        case ConnectException:
+            return true
+        case EOFException:
+            sleep(2000)
+            return false
+        case java.net.SocketTimeoutException:
+            return false
+        case null:
+            if (exception.message.startsWith('Access denied')) return true
+        default:
+            false
+    }
+
+}
+

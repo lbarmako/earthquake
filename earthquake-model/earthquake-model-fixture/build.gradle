@@ -1,0 +1,5 @@
+dependencies {
+    testCompile project(':earthquake-model')
+    testCompile "net.bytebuddy:byte-buddy:$byteBuddyVersion"
+    testCompile "org.apache.commons:commons-lang3:$commonsLangVersion"
+}

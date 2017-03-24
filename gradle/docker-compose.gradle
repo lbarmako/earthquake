@@ -1,0 +1,19 @@
+apply plugin: 'docker-compose'
+
+def dockerComposePresent = {
+    def dockerCompose = new File('/usr/local/bin/docker-compose')
+    dockerCompose.isFile() && dockerCompose.canExecute()
+}
+
+composeUp //.onlyIf dockerComposePresent
+
+composeDown //.onlyIf dockerComposePresent
+
+dockerCompose {
+    // useComposeFiles = ['docker-compose.yml', 'docker-compose.prod.yml'] // like 'docker-compose -f <file>'
+    stopContainers = project.hasProperty('docker-compose.dontStopContainers') ? false : true             // useful for debugging
+    // removeContainers = false             // Dont run 'docker-compose down'. And ignores removeImages or removeVolumes
+    // removeImages = "None" // Other accepted values are: "All" and "Local"
+    // removeVolumes = false
+    // environment.put 'BACKEND_ADDRESS', '192.168.1.100' // Pass environment variable to 'docker-compose' for substitution in compose file
+}

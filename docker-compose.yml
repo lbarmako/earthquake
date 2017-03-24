@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+
+  mysql:
+    image: mysql:5.6
+    volumes:
+     - ./data/src/docker/mysql/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql:ro
+    environment:
+      MYSQL_USER: devusr
+      MYSQL_PASSWORD: ab1234
+      MYSQL_ROOT_PASSWORD: password
+    expose:
+    - "3306"
+    ports:
+    - "3306:3306"

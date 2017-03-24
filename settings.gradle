@@ -1,0 +1,7 @@
+rootProject.name = 'earthquake'
+include 'server'
+include 'data'
+include 'earthquake-sal'
+include 'earthquake-model'
+include 'earthquake-model:earthquake-model-fixture'
+

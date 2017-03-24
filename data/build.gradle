@@ -1,0 +1,41 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.0.3"
+    }
+}
+
+apply plugin: 'org.flywaydb.flyway'
+
+description = "Earthquake app MySQL database migration"
+
+task run(dependsOn: flywayMigrate)
+flywayMigrate.dependsOn(rootProject.getTasksByName("composeUp", true))
+
+dependencies {
+    compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+}
+
+task createTar(type: Tar) {
+    archiveName = "earthquake-dbscripts-${version}-1.noarch.tar"
+    destinationDir = new File("$buildDir/distributions")
+
+    from("$projectDir/src/main/resources/db/migration") {
+        include "**/*.sql"
+    }
+}
+
+//publishing {
+//    publications {
+//        dbscripts(MavenPublication) {
+//            artifactId 'collections-dbscript'
+//            version project.version.endsWith("-SNAPSHOT") ? project.version.replace("-SNAPSHOT", "") + "-s" + buildTimestamp + "-SNAPSHOT" : project.version
+//            artifact createTar
+//        }
+//    }
+//
+//}

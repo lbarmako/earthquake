@@ -1,0 +1,15 @@
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+jar {
+    manifest {
+        attributes(
+                'Specification-Title': project.name,
+                'Specification-Vendor': 'Touch',
+                'Implementation-Title': project.artifactName,
+                'Implementation-Version': project.version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-JDK': System.getProperty('java.version'),
+        )
+    }
+}

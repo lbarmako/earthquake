@@ -1,0 +1,77 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'application'
+apply plugin: 'nebula.ospackage'
+apply from: "${rootDir}/gradle/docker-compose.gradle"
+apply from: "${rootDir}/gradle/mysql-ready.gradle"
+
+dependencies {
+    compile(
+            project(':earthquake-model'),
+            "com.google.inject:guice:$guiceVersion",
+            "com.google.inject.extensions:guice-persist:$guiceVersion",
+//            "com.touchcorp.service-commons:touch-logging:$touchServiceCommonsVersion",
+            "io.dropwizard:dropwizard-db:$dropwizardVersion",
+            "io.dropwizard:dropwizard-jdbi:$dropwizardVersion",
+            "mysql:mysql-connector-java:$mysqlConnectorVersion",
+            "io.dropwizard:dropwizard-core:$dropwizardVersion",
+            "io.dropwizard:dropwizard-hibernate:$dropwizardVersion",
+            "io.dropwizard.modules:dropwizard-flyway:$dropwizardFlywayBundleVersion",
+//            "com.touchcorp.service-commons:dropwizard-cors:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-version:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-correlation:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-cache-control:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-metrics-logging:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-logging:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-ping:$serviceCommonsVersion",
+//            "com.touchcorp.service-commons:dropwizard-exception-mapper:$serviceCommonsVersion",
+//            "org.apache.camel:camel-core:$camelVersion",
+//            "org.apache.camel:camel-csv:$camelVersion",
+//            "org.apache.camel:camel-guice:$camelVersion",
+//            "org.apache.camel:camel-ftp:$camelVersion",
+//            'com.commercehub.dropwizard:dropwizard-camel-core:3.0.0',
+            "com.mchange:c3p0:$c3poVersion",
+            "org.hibernate:hibernate-entitymanager:$hibernateVersion",
+            "org.hibernate:hibernate-java8:$hibernateVersion",
+            "org.hibernate:hibernate-c3p0:$hibernateVersion"
+    )
+    testCompile(
+            project(':earthquake-model:earthquake-model-fixture').sourceSets.test.output,
+            "io.dropwizard:dropwizard-testing:$dropwizardVersion",
+            "org.skyscreamer:jsonassert:$jsonAssertVersion",
+            "org.jooq:jool:$joolJooqVersion",
+            project(':earthquake-sal'),
+            'org.jetbrains:annotations:15.0',
+            'pl.pragmatists:JUnitParams:1.0.5'
+    )
+}
+
+shadowJar {
+    mergeServiceFiles()
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+
+mainClassName = 'com.intfinit.earthquake.server.EarthquakeApplication'
+
+applicationDefaultJvmArgs = ["-Xmx512m",
+                             "-Ddw.logging.appenders[0].threshold=OFF",
+                             "-Ddw.logging.appenders[1].threshold=INFO",
+                             "-Ddw.server.requestLog.appenders[0].threshold=INFO"
+]
+
+run {
+    args 'server', 'src/main/resources/earthquake.yml'
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': mainClassName, "Implementation-Version": version)
+    }
+    baseName 'earthquake'
+}
+
+
+dockerCompose.isRequiredBy(test)
+
+composeUp.finalizedBy mysqlReady
+run.dependsOn composeUp

@@ -1,0 +1,44 @@
+# Logs are configured for production. See `applicationDefaultJvmArgs` in build.gradle for how to
+# configure for dev.
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8160
+  adminConnectors:
+    - type: http
+      port: 8161
+  requestLog:
+    appenders:
+      - type: file
+        currentLogFilename: "${LOG_PATH:-./logs}/request/earthquakes-request.log"
+        archivedLogFilenamePattern: "${ARCHIVED_LOG_PATH:-./logs}/earthquakes-request.log-%d.gz"
+        archivedFileCount: 5
+      - type: console
+        threshold: OFF
+  registerDefaultExceptionMappers: false
+
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  user: ${EARTHQUAKES_DB_USERNAME:-devusr}
+  password: ${EARTHQUAKES_DB_PASSWORD:-ab1234}
+  url: jdbc:mysql://${EARTHQUAKES_MYSQL_HOST_AND_PORT:-mysql}/${EARTHQUAKES_DB_NAME:-earthquakes}?useUnicode=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+
+logging:
+  level: INFO
+  loggers:
+    "org.hibernate": WARN
+  appenders:
+    - type: file
+      timeZone: UTC
+      logFormat: "%date{yyyy-MM-dd'T'HH:mm:ss.SSSZ} level=\"%level\" logger=\"%logger\" %mdc %message%n"
+      currentLogFilename: "${LOG_PATH:-./logs}/earthquakes-api.log"
+      archivedLogFilenamePattern: "${ARCHIVED_LOG_PATH:-./logs}/earthquakes-api.log-%d.gz"
+      archivedFileCount: 5
+
+    - type: console
+      logFormat: "%date{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %-5level %mdc thread=\"%thread\" %message%n"
+      threshold: OFF
+      
+

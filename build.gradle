@@ -27,6 +27,11 @@ allprojects {
     version = '1.0-SNAPSHOT'
     group = 'com.intfinit'
     ext.artifactName = "${project.name}"
+
+    apply plugin: 'jacoco'
+    jacoco {
+        toolVersion = "0.7.6.201602180812"
+    }
 }
 
 subprojects {
@@ -47,11 +52,30 @@ subprojects {
                 "com.google.guava:guava:$guavaVersion",
         )
     }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true
+            csv.enabled = false
+            html.enabled = true
+            html.destination "${buildDir}/jacocoHtml"
+        }
+    }
+
+    test {
+        testLogging {
+            showStandardStreams = true
+            showStackTraces = true
+            events = ['standard_out', 'standard_error']
+        }
+    }
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     compileJava.options.incremental = true
 }
+
 
 task runConfigurations(type: Copy) {
     from('build-config/runConfigurations')

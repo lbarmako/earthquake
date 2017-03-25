@@ -6,6 +6,7 @@ import com.google.inject.persist.PersistService;
 import com.intfinit.commons.dropwizard.logging.filter.alt.DynamicBodyLoggingFilter;
 import com.intfinit.earthquakes.config.EarthquakeApplicationConfiguration;
 import com.intfinit.earthquakes.dao.DaoModule;
+import com.intfinit.earthquakes.resources.EarthquakeResource;
 import com.intfinit.earthquakes.server.health.MysqlJpaHealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -92,7 +93,7 @@ public class EarthquakeApplication extends Application<EarthquakeApplicationConf
         JerseyEnvironment jersey = environment.jersey();
         jersey.register(createBodyLoggingFilter(LoggerFactory.getLogger(BODY_LOGGER_NAME)));
 
-// TODO register resource       jersey.register(injector.getInstance(CollectionsResource.class));
+        jersey.register(injector.getInstance(EarthquakeResource.class));
 
         //enable returning validation errors
         jersey.enable(BV_SEND_ERROR_IN_RESPONSE);

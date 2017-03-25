@@ -7,12 +7,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
 
+import static com.intfinit.earthquakes.dao.entity.EarthquakeRecord.MIN_MAGNITUDE_PARAM;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @NamedQueries({
         @NamedQuery(
                 name = EarthquakeRecord.GET_ALL_EARTHQUAKE_RECORDS,
                 query = "select er from EarthquakeRecord as er"
+        ),
+        @NamedQuery(
+                name = EarthquakeRecord.GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE,
+                query = "select er from EarthquakeRecord as er where er.magnitude >= :" + MIN_MAGNITUDE_PARAM
         )
 })
 @Entity
@@ -20,13 +25,15 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class EarthquakeRecord {
 
     public static final String GET_ALL_EARTHQUAKE_RECORDS = "GET_ALL_EARTHQUAKE_RECORDS";
-    public static final String EARTHQUAKE_DATETIME = "earthquake_datetime";
-    public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
-    public static final String MAGNITUDE = "magnitude";
-    public static final String DEPTH = "depth";
-    public static final String REGION = "region";
-    public static final String SOURCE_NAME = "source_name";
+    public static final String GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE = "GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE";
+    public static final String MIN_MAGNITUDE_PARAM = "min_magnitude";
+    private static final String EARTHQUAKE_DATETIME = "earthquake_datetime";
+    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE = "longitude";
+    private static final String MAGNITUDE = "magnitude";
+    private static final String DEPTH = "depth";
+    private static final String REGION = "region";
+    private static final String SOURCE_NAME = "source_name";
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -66,10 +73,26 @@ public class EarthquakeRecord {
     @Column(name = REGION)
     private String region;
 
+    public EarthquakeRecord() {
+        // no-arg hibernate constructor
+    }
+
+    private EarthquakeRecord(String sourceName, OffsetDateTime earthQuakeDatetime, Double latitude, Double longitude,
+                             Double magnitude, Double depth, String region) {
+        this.sourceName = sourceName;
+        this.earthQuakeDatetime = earthQuakeDatetime;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.magnitude = magnitude;
+        this.depth = depth;
+        this.region = region;
+    }
+
     public Long getId() {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public void setId(Long id) {
         this.id = id;
     }
@@ -128,5 +151,54 @@ public class EarthquakeRecord {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public static class Builder {
+        private String sourceName;
+        private OffsetDateTime earthQuakeDatetime;
+        private Double latitude;
+        private Double longitude;
+        private Double magnitude;
+        private Double depth;
+        private String region;
+
+        public Builder withSourceName(String sourceName) {
+            this.sourceName = sourceName;
+            return this;
+        }
+
+        public Builder withEarthQuakeDatetime(OffsetDateTime earthQuakeDatetime) {
+            this.earthQuakeDatetime = earthQuakeDatetime;
+            return this;
+        }
+
+        public Builder withLatitude(Double latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public Builder withLongitude(Double longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+        public Builder withMagnitude(Double magnitude) {
+            this.magnitude = magnitude;
+            return this;
+        }
+
+        public Builder withDepth(Double depth) {
+            this.depth = depth;
+            return this;
+        }
+
+        public Builder withRegion(String region) {
+            this.region = region;
+            return this;
+        }
+
+        public EarthquakeRecord build() {
+            return new EarthquakeRecord(sourceName, earthQuakeDatetime, latitude, longitude, magnitude, depth, region);
+        }
     }
 }

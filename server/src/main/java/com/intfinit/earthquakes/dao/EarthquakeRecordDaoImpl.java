@@ -3,19 +3,17 @@ package com.intfinit.earthquakes.dao;
 import com.google.inject.persist.Transactional;
 import com.intfinit.earthquakes.dao.entity.EarthquakeRecord;
 import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
-public class EarthquakeRecordDaoImpl extends GenericDaoImpl<EarthquakeRecord, Long> implements EarthquakeRecordDao {
+import static com.intfinit.earthquakes.dao.entity.EarthquakeRecord.GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE;
 
-    private static final long serialVersionUID = 591072872061545776L;
-    private static final Logger LOG = LoggerFactory.getLogger(EarthquakeRecordDaoImpl.class);
+public class EarthquakeRecordDaoImpl extends GenericDaoImpl<EarthquakeRecord, Long> implements EarthquakeRecordDao {
 
     @Inject
     public EarthquakeRecordDaoImpl(Provider<EntityManager> emProvider) {
@@ -41,5 +39,13 @@ public class EarthquakeRecordDaoImpl extends GenericDaoImpl<EarthquakeRecord, Lo
                 .using("magnitude", earthquakeRecord.getMagnitude())
                 .using("depth", earthquakeRecord.getDepth()).load();
         return Optional.ofNullable(loadedRecord);
+    }
+
+    @Override
+    public List<EarthquakeRecord> getEarthquakeRecords(Double minMagnitude, Integer limit) {
+        EntityManager em = getEntityManager();
+        return em.createNamedQuery(GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE, EarthquakeRecord.class)
+                .setParameter(EarthquakeRecord.MIN_MAGNITUDE_PARAM, minMagnitude)
+                .setMaxResults(limit).getResultList();
     }
 }

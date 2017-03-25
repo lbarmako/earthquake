@@ -62,14 +62,6 @@ subprojects {
         }
     }
 
-    test {
-        testLogging {
-            showStandardStreams = true
-            showStackTraces = true
-            events = ['standard_out', 'standard_error']
-        }
-    }
-
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 

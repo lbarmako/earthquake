@@ -8,17 +8,15 @@ import com.intfinit.earthquakes.serializers.OffsetDateTimeDeserializer;
 import com.intfinit.earthquakes.serializers.OffsetDateTimeSerializer;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
-public class EarthquakeDataModel {
+public class EarthquakeRecordModel {
 
     @Size(max = 2)
     @NotNull
@@ -47,13 +45,13 @@ public class EarthquakeDataModel {
     private String region;
 
     @JsonCreator
-    public EarthquakeDataModel(@JsonProperty("sourceName") String sourceName,
-                               @JsonProperty("earthQuakeDatetime") OffsetDateTime earthQuakeDatetime,
-                               @JsonProperty("latitude") Double latitude,
-                               @JsonProperty("longitude") Double longitude,
-                               @JsonProperty("magnitude") Double magnitude,
-                               @JsonProperty("depth") Double depth,
-                               @JsonProperty("region") String region) {
+    public EarthquakeRecordModel(@JsonProperty("sourceName") String sourceName,
+                                 @JsonProperty("earthQuakeDatetime") OffsetDateTime earthQuakeDatetime,
+                                 @JsonProperty("latitude") Double latitude,
+                                 @JsonProperty("longitude") Double longitude,
+                                 @JsonProperty("magnitude") Double magnitude,
+                                 @JsonProperty("depth") Double depth,
+                                 @JsonProperty("region") String region) {
         this.sourceName = sourceName;
         this.earthQuakeDatetime = earthQuakeDatetime;
         this.latitude = latitude;
@@ -95,7 +93,7 @@ public class EarthquakeDataModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EarthquakeDataModel that = (EarthquakeDataModel) o;
+        EarthquakeRecordModel that = (EarthquakeRecordModel) o;
         return Objects.equals(sourceName, that.sourceName) &&
                 Objects.equals(earthQuakeDatetime, that.earthQuakeDatetime) &&
                 Objects.equals(latitude, that.latitude) &&
@@ -121,5 +119,54 @@ public class EarthquakeDataModel {
                 .add("depth", depth)
                 .add("region", region)
                 .toString();
+    }
+
+    public static class Builder {
+        private String sourceName;
+        private OffsetDateTime earthQuakeDatetime;
+        private Double latitude;
+        private Double longitude;
+        private Double magnitude;
+        private Double depth;
+        private String region;
+
+        public Builder withSourceName(String sourceName) {
+            this.sourceName = sourceName;
+            return this;
+        }
+
+        public Builder withEarthQuakeDatetime(OffsetDateTime earthQuakeDatetime) {
+            this.earthQuakeDatetime = earthQuakeDatetime;
+            return this;
+        }
+
+        public Builder withLatitude(Double latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public Builder withLongitude(Double longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+        public Builder withMagnitude(Double magnitude) {
+            this.magnitude = magnitude;
+            return this;
+        }
+
+        public Builder withDepth(Double depth) {
+            this.depth = depth;
+            return this;
+        }
+
+        public Builder withRegion(String region) {
+            this.region = region;
+            return this;
+        }
+
+        public EarthquakeRecordModel build() {
+            return new EarthquakeRecordModel(sourceName, earthQuakeDatetime, latitude, longitude, magnitude, depth, region);
+        }
     }
 }

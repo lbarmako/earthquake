@@ -51,7 +51,7 @@ shadowJar {
     exclude 'META-INF/*.RSA'
 }
 
-mainClassName = 'com.intfinit.earthquake.server.EarthquakeApplication'
+mainClassName = 'com.intfinit.earthquakes.server.EarthquakeApplication'
 
 applicationDefaultJvmArgs = ["-Xmx512m",
                              "-Ddw.logging.appenders[0].threshold=OFF",
@@ -60,7 +60,7 @@ applicationDefaultJvmArgs = ["-Xmx512m",
 ]
 
 run {
-    args 'server', 'src/main/resources/earthquake.yml'
+    args 'server', 'src/main/resources/earthquakes.yml'
 }
 
 jar {

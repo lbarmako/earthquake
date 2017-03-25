@@ -1,8 +1,9 @@
 package com.intfinit.earthquakes.dao.entity.fixture;
 
 import com.intfinit.earthquakes.dao.entity.EarthquakeRecord;
-import com.intfinit.earthquakes.model.EarthquakeDataModel;
-import com.touchcorp.collections.model.fixtures.EarthquakeDataModelFixture;
+import com.intfinit.earthquakes.dao.entity.EarthquakeRecord.Builder;
+import com.intfinit.earthquakes.model.EarthquakeRecordModel;
+import com.touchcorp.collections.model.fixtures.EarthquakeRecordModelFixture;
 
 import java.util.List;
 
@@ -14,28 +15,28 @@ public class EarthquakeRecordFixture {
         List<EarthquakeRecord> earthquakeRecordList = newArrayList();
         EarthquakeRecord earthquakeRecord;
         for (long recordCount = 0; recordCount < numberOfRecords; recordCount++) {
-            earthquakeRecord = buildEarthquakeData();
-            earthquakeRecord.setId(recordCount);
+            earthquakeRecord = buildEarthquakeRecord();
+            earthquakeRecord.setMagnitude(earthquakeRecord.getMagnitude() + recordCount);
             earthquakeRecordList.add(earthquakeRecord);
         }
         return earthquakeRecordList;
     }
 
-    public static EarthquakeRecord buildEarthquakeData() {
-        return createEarthquakeData();
+    public static EarthquakeRecord buildEarthquakeRecord() {
+        return createEarthquakeRecordFromModel();
     }
 
-    private static EarthquakeRecord createEarthquakeData() {
-        EarthquakeDataModel earthquakeDataModel = EarthquakeDataModelFixture.buildEarthquakeDataModel();
-        EarthquakeRecord earthquakeRecord = new EarthquakeRecord();
-        earthquakeRecord.setEarthQuakeDatetime(earthquakeDataModel.getEarthQuakeDatetime());
-        earthquakeRecord.setSourceName(earthquakeDataModel.getSourceName());
-        earthquakeRecord.setLatitude(earthquakeDataModel.getLatitude());
-        earthquakeRecord.setLongitude(earthquakeDataModel.getLongitude());
-        earthquakeRecord.setMagnitude(earthquakeDataModel.getMagnitude());
-        earthquakeRecord.setDepth(earthquakeDataModel.getDepth());
-        earthquakeRecord.setRegion(earthquakeDataModel.getRegion());
-        return earthquakeRecord;
+    private static EarthquakeRecord createEarthquakeRecordFromModel() {
+        EarthquakeRecordModel earthquakeRecordModel = EarthquakeRecordModelFixture.buildEarthquakeDataModel();
+        return new Builder()
+                .withDepth(earthquakeRecordModel.getDepth())
+                .withEarthQuakeDatetime(earthquakeRecordModel.getEarthQuakeDatetime())
+                .withSourceName(earthquakeRecordModel.getSourceName())
+                .withLatitude(earthquakeRecordModel.getLatitude())
+                .withLongitude(earthquakeRecordModel.getLongitude())
+                .withMagnitude(earthquakeRecordModel.getMagnitude())
+                .withRegion(earthquakeRecordModel.getRegion())
+                .build();
     }
 }
 

@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.intfinit.earthquakes.dao.entity.EarthquakeRecord.GET_ALL_EARTHQUAKE_RECORDS;
-import static com.intfinit.earthquakes.dao.entity.fixture.EarthquakeRecordFixture.buildEarthquakeData;
+import static com.intfinit.earthquakes.dao.entity.fixture.EarthquakeRecordFixture.buildEarthquakeRecord;
+import static com.intfinit.earthquakes.dao.entity.fixture.EarthquakeRecordFixture.buildEarthquakeDataList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -53,7 +54,7 @@ public class EarthquakeRecordDaoTest {
 
     @Test
     public void saveEarthquakeRecord() {
-        EarthquakeRecord earthquakeRecord = buildEarthquakeData();
+        EarthquakeRecord earthquakeRecord = buildEarthquakeRecord();
         earthquakeRecordDao.save(earthquakeRecord);
 
         TypedQuery<EarthquakeRecord> namedQuery = em.createNamedQuery(GET_ALL_EARTHQUAKE_RECORDS, EarthquakeRecord.class);
@@ -73,7 +74,7 @@ public class EarthquakeRecordDaoTest {
     @Test
     @Transactional
     public void findByNaturalIdWhenRecordExistsReturnsOneRecord() {
-        EarthquakeRecord earthquakeRecord = buildEarthquakeData();
+        EarthquakeRecord earthquakeRecord = buildEarthquakeRecord();
         earthquakeRecordDao.save(earthquakeRecord);
 
         Optional<EarthquakeRecord> earthquakeRecordOptional = earthquakeRecordDao.findByNaturalId(earthquakeRecord);
@@ -83,7 +84,7 @@ public class EarthquakeRecordDaoTest {
     @Test
     @Transactional
     public void findByNaturalIdWhenRecordDoesNotExistsReturnsNull() {
-        EarthquakeRecord earthquakeRecord = buildEarthquakeData();
+        EarthquakeRecord earthquakeRecord = buildEarthquakeRecord();
 
         Optional<EarthquakeRecord> earthquakeRecordOptional = earthquakeRecordDao.findByNaturalId(earthquakeRecord);
         assertThat(earthquakeRecordOptional).isEmpty();
@@ -92,13 +93,45 @@ public class EarthquakeRecordDaoTest {
     @Test
     @Transactional
     public void duplicateInsertCausesPersistenceException() {
-        EarthquakeRecord earthquakeRecord1 = buildEarthquakeData();
+        EarthquakeRecord earthquakeRecord1 = buildEarthquakeRecord();
         earthquakeRecordDao.save(earthquakeRecord1);
-        EarthquakeRecord earthquakeRecord2 = buildEarthquakeData();
+        EarthquakeRecord earthquakeRecord2 = buildEarthquakeRecord();
         assertThatExceptionOfType(PersistenceException.class)
                 .isThrownBy(() -> {
                     earthquakeRecordDao.save(earthquakeRecord2);
                 });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Transactional
+    public void getEarthquakeRecordsThrowsIllegalArgumentExceptionWhenPassedNegativeMaxResults() {
+        earthquakeRecordDao.getEarthquakeRecords(0d, -1);
+    }
+
+    @Test
+    @Transactional
+    public void getEarthquakeRecordsReturnsAllRecordsWhenPassedZeroMaxResults() {
+        List<EarthquakeRecord> earthquakeRecords = buildEarthquakeDataList(10);
+        earthquakeRecords.forEach(earthquakeRecord -> earthquakeRecordDao.save(earthquakeRecord));
+        assertThat(earthquakeRecordDao.getEarthquakeRecords(0d, 0)).hasSize(earthquakeRecords.size());
+    }
+
+    @Test
+    @Transactional
+    public void getEarthquakeRecordsReturnsSpecifiedNumberOfRecordsWhenLimitIsBelowTotal() {
+        List<EarthquakeRecord> earthquakeRecords = buildEarthquakeDataList(10);
+        earthquakeRecords.forEach(earthquakeRecord -> earthquakeRecordDao.save(earthquakeRecord));
+        assertThat(earthquakeRecordDao.getEarthquakeRecords(0d, 5)).hasSize(5);
+    }
+
+    @Test
+    @Transactional
+    public void getEarthquakeRecordsReturnsExpectedNumberOfRecordsWhenMinMagnitudeIsSet() {
+        List<EarthquakeRecord> earthquakeRecords = buildEarthquakeDataList(10);
+        final double minimumMagnitude = 9.3d;
+        long expectedGreaterOrEqualsThenMinimum = earthquakeRecords.stream().filter(earthquakeRecord -> earthquakeRecord.getMagnitude() >= minimumMagnitude).count();
+        earthquakeRecords.forEach(earthquakeRecord -> earthquakeRecordDao.save(earthquakeRecord));
+        assertThat(earthquakeRecordDao.getEarthquakeRecords(minimumMagnitude, 0)).hasSize((int) expectedGreaterOrEqualsThenMinimum);
     }
 
     private void checkEarquakeRecord(EarthquakeRecord expectedRecord, EarthquakeRecord actualRecord) {

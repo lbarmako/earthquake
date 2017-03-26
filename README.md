@@ -11,6 +11,14 @@ User will not be able to execute any resource methods if he fails to provide Aut
 If user name starts with `update_` he will also be able to post new earthquake data.
 All other users will only be able to get the list of recent earthquakes.
 
+
+# TODOs
+- Ideally I would've liked to add unit tests for _EarthquakeRecordService_, _EarthquakeResource_ 
+as well as authentication classes.
+- Add Java client so clients would not have to call rest api directly.
+- Add exception mappers.
+- Add performance and health metrics
+  
 # Local setup
 
 * Dev environment

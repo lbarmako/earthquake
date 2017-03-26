@@ -91,8 +91,12 @@ public class EarthquakeRecordModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EarthquakeRecordModel that = (EarthquakeRecordModel) o;
         return Objects.equals(sourceName, that.sourceName) &&
                 Objects.equals(earthQuakeDatetime, that.earthQuakeDatetime) &&

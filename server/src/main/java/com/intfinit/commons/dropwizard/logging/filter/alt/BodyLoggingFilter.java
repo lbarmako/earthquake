@@ -65,7 +65,7 @@ public class BodyLoggingFilter implements ContainerRequestFilter, ClientRequestF
         private final Logger logger;
         private final Function<String, String> mask;
 
-        public LoggingForwarder(Logger logger, Function<String, String> mask) {
+        LoggingForwarder(Logger logger, Function<String, String> mask) {
             super(LoggingForwarder.class.getName(), null);
             this.logger = logger;
             this.mask = MoreObjects.firstNonNull(mask, DEFAULT_MASK);

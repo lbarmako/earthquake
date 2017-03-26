@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_5_0.dtd">
+<suppressions>
+
+    <!-- entities have "duplicated" getters / setters -->
+    <suppress files=".*com.touchcorp.collections.core.entity.*\.java" checks="StrictDuplicateCode" />
+    
+    <suppress files=".*Consumer\.java" checks="ParameterNumber" />
+    <suppress files=".*ConsumerModel\.java" checks="ParameterNumber" />
+    <suppress files=".*ConsumerFixture\.java" checks="ParameterNumber" />
+    
+</suppressions>

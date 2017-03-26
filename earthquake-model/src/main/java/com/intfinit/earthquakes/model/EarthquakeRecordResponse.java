@@ -34,8 +34,12 @@ public class EarthquakeRecordResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EarthquakeRecordResponse that = (EarthquakeRecordResponse) o;
         return Objects.equals(recordCount, that.recordCount) &&
                 Objects.equals(earthquakes, that.earthquakes);

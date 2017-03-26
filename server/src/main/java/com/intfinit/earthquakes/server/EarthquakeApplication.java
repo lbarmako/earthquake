@@ -68,7 +68,7 @@ public class EarthquakeApplication extends Application<EarthquakeApplicationConf
         PersistService persistService = persistenceRootInjector.getInstance(PersistService.class);
         persistService.start();
 
-        return injector = persistenceRootInjector.createChildInjector(new DaoModule(), new JerseyResourcesModule());
+        return persistenceRootInjector.createChildInjector(new DaoModule(), new JerseyResourcesModule());
     }
 
     private void enableEnvironmentVariableOverride(Bootstrap<EarthquakeApplicationConfiguration> bootstrap) {

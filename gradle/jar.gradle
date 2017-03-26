@@ -5,7 +5,7 @@ jar {
     manifest {
         attributes(
                 'Specification-Title': project.name,
-                'Specification-Vendor': 'Touch',
+                'Specification-Vendor': 'Intfinit',
                 'Implementation-Title': project.artifactName,
                 'Implementation-Version': project.version,
                 'Built-By': System.getProperty('user.name'),

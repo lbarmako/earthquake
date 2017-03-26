@@ -16,7 +16,7 @@ public class FieldMaskerTest {
 
     @Test
     public void shouldMaskMultipleFields() {
-        String payload = "{\"email\":\"automated.test4@touchcorp.com\",\"password\":\"Pass\\\"word1234#\"," +
+        String payload = "{\"email\":\"automated.test4@intfinit.com\",\"password\":\"Pass\\\"word1234#\"," +
                 "\"firstName\":\"firstName\",\"surname\":\"surname\",\"dob\":\"1995-07-28\"," +
                 "\"mobile\":null,\"verificationUrl\":null,\"optInForPromotions\":false,\"optInForSms\":false}";
 
@@ -24,7 +24,7 @@ public class FieldMaskerTest {
 
         String mask = masker.mask(payload);
 
-        assertThat(mask).isEqualTo("{\"email\":\"automated.test4@touchcorp.com\",\"password\":\"***\"," +
+        assertThat(mask).isEqualTo("{\"email\":\"automated.test4@intfinit.com\",\"password\":\"***\"," +
                 "\"firstName\":\"firstName\",\"surname\":\"surname\",\"dob\":\"***\"," +
                 "\"mobile\":null,\"verificationUrl\":null,\"optInForPromotions\":false,\"optInForSms\":false}");
     }

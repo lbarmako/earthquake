@@ -7,6 +7,7 @@ apply plugin: 'application'
 apply plugin: 'nebula.ospackage'
 apply from: "${rootDir}/gradle/docker-compose.gradle"
 apply from: "${rootDir}/gradle/mysql-ready.gradle"
+apply from: "${rootDir}/gradle/java-defaults.gradle"
 
 dependencies {
     compile(
@@ -18,6 +19,7 @@ dependencies {
             "mysql:mysql-connector-java:$mysqlConnectorVersion",
             "io.dropwizard:dropwizard-core:$dropwizardVersion",
             "io.dropwizard:dropwizard-hibernate:$dropwizardVersion",
+            "io.dropwizard:dropwizard-auth:$dropwizardVersion",
             "io.dropwizard.modules:dropwizard-flyway:$dropwizardFlywayBundleVersion",
             "com.mchange:c3p0:$c3poVersion",
             "org.hibernate:hibernate-entitymanager:$hibernateVersion",

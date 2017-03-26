@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
 
-public class EarthquakeRecordResponse {
+public class EarthquakeRecordResponse implements Serializable {
 
+    private static final long serialVersionUID = 379639607700235261L;
     @NotNull
     private Integer recordCount;
 

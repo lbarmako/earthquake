@@ -5,7 +5,7 @@ import com.intfinit.earthquakes.model.EarthquakeRecordModel;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.touchcorp.collections.model.fixtures.EarthquakeRecordModelFixture.buildEarthquakeDataModel;
+import static com.intfinit.earthquakes.model.fixtures.EarthquakeRecordModelFixture.buildEarthquakeDataModel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EarthquakeRecordModelToRecordTransformerTest {

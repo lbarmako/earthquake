@@ -4,17 +4,25 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 import com.intfinit.commons.dropwizard.logging.filter.alt.DynamicBodyLoggingFilter;
+import com.intfinit.earthquakes.auth.SimpleAuthenticator;
+import com.intfinit.earthquakes.auth.SimpleAuthorizer;
+import com.intfinit.earthquakes.auth.SimplePrincipal;
 import com.intfinit.earthquakes.config.EarthquakeAppConfiguration;
 import com.intfinit.earthquakes.modules.EarthquakeModule;
 import com.intfinit.earthquakes.modules.JerseyResourceModule;
 import com.intfinit.earthquakes.resources.EarthquakeResource;
 import com.intfinit.earthquakes.server.health.MysqlJpaHealthCheck;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.DefaultUnauthorizedHandler;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +51,23 @@ public class EarthquakeApp extends Application<EarthquakeAppConfiguration> {
         return EarthquakeApp.class.getPackage().getImplementationVersion();
     }
 
+    private static void setupAuthentication(Environment env) {
+
+        BasicCredentialAuthFilter<SimplePrincipal> authFilter =
+                new BasicCredentialAuthFilter.Builder<SimplePrincipal>()
+                        .setAuthenticator(new SimpleAuthenticator())
+                        .setRealm("Basic Example Realm")
+                        .setAuthorizer(new SimpleAuthorizer())
+                        .setUnauthorizedHandler(new DefaultUnauthorizedHandler())
+                        .buildAuthFilter();
+        AuthDynamicFeature authDynamicFeature = new AuthDynamicFeature(authFilter);
+        env.jersey().register(authDynamicFeature);
+
+        env.jersey().register(new AuthValueFactoryProvider.Binder<>(SimplePrincipal.class));
+        env.jersey().register(RolesAllowedDynamicFeature.class);
+
+    }
+
     @Override
     public void initialize(Bootstrap<EarthquakeAppConfiguration> bootstrap) {
         enableEnvironmentVariableOverride(bootstrap);
@@ -61,6 +86,7 @@ public class EarthquakeApp extends Application<EarthquakeAppConfiguration> {
         configureObjectMapper(env);
         configureJersey(env, injector);
         setupHealthChecks(env, injector);
+        setupAuthentication(env);
     }
 
     private Injector setupGuice(EarthquakeAppConfiguration config) {
@@ -99,6 +125,5 @@ public class EarthquakeApp extends Application<EarthquakeAppConfiguration> {
         //enable returning validation errors
         jersey.enable(BV_SEND_ERROR_IN_RESPONSE);
     }
-
 
 }

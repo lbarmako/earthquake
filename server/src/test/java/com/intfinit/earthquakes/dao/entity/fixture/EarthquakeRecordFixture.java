@@ -3,7 +3,7 @@ package com.intfinit.earthquakes.dao.entity.fixture;
 import com.intfinit.earthquakes.dao.entity.EarthquakeRecord;
 import com.intfinit.earthquakes.dao.entity.EarthquakeRecord.Builder;
 import com.intfinit.earthquakes.model.EarthquakeRecordModel;
-import com.touchcorp.collections.model.fixtures.EarthquakeRecordModelFixture;
+import com.intfinit.earthquakes.model.fixtures.EarthquakeRecordModelFixture;
 
 import java.util.List;
 

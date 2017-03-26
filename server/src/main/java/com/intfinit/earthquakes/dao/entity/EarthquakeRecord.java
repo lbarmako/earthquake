@@ -24,6 +24,7 @@ import static javax.persistence.GenerationType.IDENTITY;
         @NamedQuery(
                 name = EarthquakeRecord.GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE,
                 query = "select er from EarthquakeRecord as er where er.magnitude >= :" + MIN_MAGNITUDE_PARAM
+                        + " order by er.id desc "
         )
 })
 @Entity

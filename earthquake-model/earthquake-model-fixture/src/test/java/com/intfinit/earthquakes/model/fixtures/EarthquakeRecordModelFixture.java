@@ -1,4 +1,4 @@
-package com.touchcorp.collections.model.fixtures;
+package com.intfinit.earthquakes.model.fixtures;
 
 import com.intfinit.earthquakes.model.EarthquakeRecordModel;
 import com.intfinit.earthquakes.model.EarthquakeRecordModel.Builder;

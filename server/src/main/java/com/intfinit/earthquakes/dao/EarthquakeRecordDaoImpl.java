@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,8 @@ import java.util.Optional;
 import static com.intfinit.earthquakes.dao.entity.EarthquakeRecord.GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE;
 
 public class EarthquakeRecordDaoImpl extends GenericDaoImpl<EarthquakeRecord, Long> implements EarthquakeRecordDao {
+
+    private static final long serialVersionUID = 4765521568527320716L;
 
     @Inject
     public EarthquakeRecordDaoImpl(Provider<EntityManager> emProvider) {
@@ -44,8 +47,12 @@ public class EarthquakeRecordDaoImpl extends GenericDaoImpl<EarthquakeRecord, Lo
     @Override
     public List<EarthquakeRecord> getEarthquakeRecords(Double minMagnitude, Integer limit) {
         EntityManager em = getEntityManager();
-        return em.createNamedQuery(GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE, EarthquakeRecord.class)
-                .setParameter(EarthquakeRecord.MIN_MAGNITUDE_PARAM, minMagnitude)
-                .setMaxResults(limit).getResultList();
+        TypedQuery<EarthquakeRecord> query = em.createNamedQuery(GET_EARTHQUAKE_RECORDS_WITH_GE_MAGNITUDE, EarthquakeRecord.class)
+                .setParameter(EarthquakeRecord.MIN_MAGNITUDE_PARAM, minMagnitude);
+        // Hibernate changed their behavior and if the max results is zero it will return zero rows.
+        if (limit > 0) {
+            query.setMaxResults(limit);
+        }
+        return query.getResultList();
     }
 }

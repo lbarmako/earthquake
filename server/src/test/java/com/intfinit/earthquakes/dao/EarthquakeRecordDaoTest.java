@@ -102,12 +102,6 @@ public class EarthquakeRecordDaoTest {
                 });
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    @Transactional
-    public void getEarthquakeRecordsThrowsIllegalArgumentExceptionWhenPassedNegativeMaxResults() {
-        earthquakeRecordDao.getEarthquakeRecords(0d, -1);
-    }
-
     @Test
     @Transactional
     public void getEarthquakeRecordsReturnsAllRecordsWhenPassedZeroMaxResults() {

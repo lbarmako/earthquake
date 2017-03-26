@@ -11,12 +11,15 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
-public class EarthquakeRecordModel {
+public class EarthquakeRecordModel implements Serializable {
+
+    private static final long serialVersionUID = 6064472518701540049L;
 
     @Size(max = 2)
     @NotNull

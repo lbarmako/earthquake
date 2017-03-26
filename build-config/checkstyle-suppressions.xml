@@ -5,7 +5,7 @@
 <suppressions>
 
     <!-- entities have "duplicated" getters / setters -->
-    <suppress files=".*com.touchcorp.collections.core.entity.*\.java" checks="StrictDuplicateCode" />
+    <suppress files=".*com.intfinit.earthquakes.dao.entity.*\.java" checks="StrictDuplicateCode" />
     
     <suppress files=".*Consumer\.java" checks="ParameterNumber" />
     <suppress files=".*ConsumerModel\.java" checks="ParameterNumber" />

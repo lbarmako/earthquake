@@ -3,6 +3,14 @@ EarthquakesApp
 An API allows mobile clients to read recent earthquake data. 
 A secured API to create new earthquake data.
 
+Please not I implemented very simple basic credentials authentication which means client
+will have to provide Authorization header,
+see [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
+
+User will not be able to execute any resource methods if he fails to provide Authorization header.
+If user name starts with `update_` he will also be able to post new earthquake data.
+All other users will only be able to get the list of recent earthquakes.
+
 # Local setup
 
 * Dev environment
@@ -37,9 +45,13 @@ See the `data` subproject
 # Run Tests
 `./gradlew build` will run tests.
 (Note. on Windows I had to run `./gradlew build --console plain` due to a bug in Gradle on Windows 10)
- 
+
 Integration tests start a DropwizardTestSupport object that starts a jetty container & connects to DB in test. 
 Flyway migrations and rollbacks happen in there.
+
+ # Run Locally
+ `./gradlew runShadow` will build shadow jar containing all dependencies and execute it.
+  This also means that the app can be easily run using `java -jar <jar name>` syntax.
 
 # Docker locally
 ## Dont stop containers after build

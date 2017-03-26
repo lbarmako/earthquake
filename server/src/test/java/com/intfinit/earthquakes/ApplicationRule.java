@@ -1,8 +1,8 @@
 package com.intfinit.earthquakes;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.intfinit.earthquakes.config.EarthquakeApplicationConfiguration;
-import com.intfinit.earthquakes.server.EarthquakeApplication;
+import com.intfinit.earthquakes.config.EarthquakeAppConfiguration;
+import com.intfinit.earthquakes.server.EarthquakeApp;
 import com.intfinit.earthquakes.util.DatabaseHelper;
 import com.intfinit.earthquakes.util.ProjectRoot;
 import io.dropwizard.testing.DropwizardTestSupport;
@@ -27,9 +27,9 @@ public class ApplicationRule implements TestRule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationRule.class);
 
-    private static final DropwizardTestSupport<EarthquakeApplicationConfiguration> SUPPORT =
+    private static final DropwizardTestSupport<EarthquakeAppConfiguration> SUPPORT =
             new DropwizardTestSupport<>(
-                    EarthquakeApplication.class,
+                    EarthquakeApp.class,
                     configPath(),
                     config("server.applicationConnectors[0].port", "0"),
                     config("server.adminConnectors[0].port", "0"),
@@ -45,7 +45,7 @@ public class ApplicationRule implements TestRule {
     private final Reload reload;
     private Client client;
     private String baseUrl;
-    private EarthquakeApplicationConfiguration configuration;
+    private EarthquakeAppConfiguration configuration;
     private DatabaseHelper dbHelper;
 
     public ApplicationRule(Reload reload) {
@@ -121,11 +121,11 @@ public class ApplicationRule implements TestRule {
         PER_TEST_CLASS
     }
 
-    public EarthquakeApplication getApplication() {
+    public EarthquakeApp getApplication() {
         return SUPPORT.getApplication();
     }
 
-    public EarthquakeApplicationConfiguration getConfiguration() {
+    public EarthquakeAppConfiguration getConfiguration() {
         return configuration;
     }
 

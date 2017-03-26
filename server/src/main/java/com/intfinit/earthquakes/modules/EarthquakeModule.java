@@ -1,6 +1,8 @@
-package com.intfinit.earthquakes.dao;
+package com.intfinit.earthquakes.modules;
 
 import com.google.inject.AbstractModule;
+import com.intfinit.earthquakes.dao.EarthquakeRecordDao;
+import com.intfinit.earthquakes.dao.EarthquakeRecordDaoImpl;
 import com.intfinit.earthquakes.services.EarthquakeRecordService;
 import com.intfinit.earthquakes.transformers.EarthquakeRecordListToResponseTransformer;
 import com.intfinit.earthquakes.transformers.EarthquakeRecordModelToRecordTransformer;
@@ -8,7 +10,7 @@ import com.intfinit.earthquakes.transformers.EarthquakeRecordToModelTransformer;
 
 import static com.google.inject.Scopes.SINGLETON;
 
-public class DaoModule extends AbstractModule {
+public class EarthquakeModule extends AbstractModule {
 
     @Override
     protected void configure() {

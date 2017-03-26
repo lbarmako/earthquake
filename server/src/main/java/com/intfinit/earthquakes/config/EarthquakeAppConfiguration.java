@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 
-public class EarthquakeApplicationConfiguration extends Configuration {
+public class EarthquakeAppConfiguration extends Configuration {
 
     public static final String JDBC_URL = "javax.persistence.jdbc.url";
     public static final String JDBC_USER = "javax.persistence.jdbc.user";
     public static final String JDBC_PASSWORD = "javax.persistence.jdbc.password";
     public static final String JDBC_DRIVER = "javax.persistence.jdbc.driver";
 
-    private static final Logger LOG = LoggerFactory.getLogger(EarthquakeApplicationConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EarthquakeAppConfiguration.class);
 
     @JsonProperty("database")
     @Valid

@@ -1,3 +1,7 @@
+ext {
+    rpmPackageName = 'earthquakes'
+}
+
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 apply plugin: 'nebula.ospackage'
@@ -25,13 +29,12 @@ dependencies {
             "io.dropwizard:dropwizard-testing:$dropwizardVersion",
             "org.skyscreamer:jsonassert:$jsonAssertVersion",
             "org.jooq:jool:$joolJooqVersion",
-            project(":earthquake-sal"),
             "org.jetbrains:annotations:$jetbrainsAnnotationsVersion",
             "pl.pragmatists:JUnitParams:$junitParamsVersion"
     )
 }
 
-mainClassName = 'com.intfinit.earthquakes.server.EarthquakeApplication'
+mainClassName = 'com.intfinit.earthquakes.server.EarthquakeApp'
 
 shadowJar {
     mergeServiceFiles()
@@ -52,7 +55,14 @@ jar {
     manifest {
         attributes("Main-Class": mainClassName, "Implementation-Version": version)
     }
-    baseName "earthquake"
+    baseName 'earthquake'
+}
+
+buildRpm {
+    packageName = rpmPackageName
+    version = project.version.endsWith('-SNAPSHOT') ? project.version.replaceAll('-SNAPSHOT', '') : version
+    release = project.version.endsWith('-SNAPSHOT') ? 's' + project.buildTimestamp : 1
+    arch = X86_64
 }
 
 dockerCompose.isRequiredBy(test)

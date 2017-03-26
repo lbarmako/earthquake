@@ -9,10 +9,15 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class EarthquakeRecordListToResponseTransformer implements Function<List<EarthquakeRecord>, EarthquakeRecordResponse> {
+public class EarthquakeRecordListToResponseTransformer
+        implements Function<List<EarthquakeRecord>, EarthquakeRecordResponse> {
+
+    private EarthquakeRecordToModelTransformer earthquakeRecordToModelTransformer;
 
     @Inject
-    private EarthquakeRecordToModelTransformer earthquakeRecordToModelTransformer;
+    public EarthquakeRecordListToResponseTransformer(EarthquakeRecordToModelTransformer earthquakeRecordToModelTransformer) {
+        this.earthquakeRecordToModelTransformer = earthquakeRecordToModelTransformer;
+    }
 
     @Override
     public EarthquakeRecordResponse apply(List<EarthquakeRecord> earthquakeRecords) {

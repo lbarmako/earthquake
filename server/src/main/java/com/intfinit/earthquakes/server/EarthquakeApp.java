@@ -4,8 +4,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 import com.intfinit.commons.dropwizard.logging.filter.alt.DynamicBodyLoggingFilter;
-import com.intfinit.earthquakes.config.EarthquakeApplicationConfiguration;
-import com.intfinit.earthquakes.dao.DaoModule;
+import com.intfinit.earthquakes.config.EarthquakeAppConfiguration;
+import com.intfinit.earthquakes.modules.EarthquakeModule;
+import com.intfinit.earthquakes.modules.JerseyResourceModule;
 import com.intfinit.earthquakes.resources.EarthquakeResource;
 import com.intfinit.earthquakes.server.health.MysqlJpaHealthCheck;
 import io.dropwizard.Application;
@@ -22,15 +23,15 @@ import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS
 import static com.google.inject.Stage.PRODUCTION;
 import static org.glassfish.jersey.server.ServerProperties.BV_SEND_ERROR_IN_RESPONSE;
 
-public class EarthquakeApplication extends Application<EarthquakeApplicationConfiguration> {
+public class EarthquakeApp extends Application<EarthquakeAppConfiguration> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EarthquakeApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EarthquakeApp.class);
     private static final String BODY_LOGGER_NAME = "EarthquakeApplicationBody";
 
     private Injector injector;
 
     public static void main(String[] args) throws Exception {
-        new EarthquakeApplication().run(args);
+        new EarthquakeApp().run(args);
     }
 
     private static DynamicBodyLoggingFilter createBodyLoggingFilter(Logger logger) {
@@ -39,11 +40,11 @@ public class EarthquakeApplication extends Application<EarthquakeApplicationConf
     }
 
     private static String getVersion() {
-        return EarthquakeApplication.class.getPackage().getImplementationVersion();
+        return EarthquakeApp.class.getPackage().getImplementationVersion();
     }
 
     @Override
-    public void initialize(Bootstrap<EarthquakeApplicationConfiguration> bootstrap) {
+    public void initialize(Bootstrap<EarthquakeAppConfiguration> bootstrap) {
         enableEnvironmentVariableOverride(bootstrap);
     }
 
@@ -52,7 +53,7 @@ public class EarthquakeApplication extends Application<EarthquakeApplicationConf
     }
 
     @Override
-    public void run(EarthquakeApplicationConfiguration config, Environment env) {
+    public void run(EarthquakeAppConfiguration config, Environment env) {
         LOG.info("{}Version={}", getClass().getSimpleName(), getVersion());
 
         injector = setupGuice(config);
@@ -62,16 +63,16 @@ public class EarthquakeApplication extends Application<EarthquakeApplicationConf
         setupHealthChecks(env, injector);
     }
 
-    private Injector setupGuice(EarthquakeApplicationConfiguration config) {
+    private Injector setupGuice(EarthquakeAppConfiguration config) {
 
         Injector persistenceRootInjector = Guice.createInjector(PRODUCTION, config.getJpaModule());
         PersistService persistService = persistenceRootInjector.getInstance(PersistService.class);
         persistService.start();
 
-        return persistenceRootInjector.createChildInjector(new DaoModule(), new JerseyResourcesModule());
+        return persistenceRootInjector.createChildInjector(new EarthquakeModule(), new JerseyResourceModule());
     }
 
-    private void enableEnvironmentVariableOverride(Bootstrap<EarthquakeApplicationConfiguration> bootstrap) {
+    private void enableEnvironmentVariableOverride(Bootstrap<EarthquakeAppConfiguration> bootstrap) {
         bootstrap.setConfigurationSourceProvider(
                 new SubstitutingSourceProvider(
                         bootstrap.getConfigurationSourceProvider(),

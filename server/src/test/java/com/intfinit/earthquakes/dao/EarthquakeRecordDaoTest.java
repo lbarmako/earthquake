@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.intfinit.earthquakes.dao.entity.EarthquakeRecord.GET_ALL_EARTHQUAKE_RECORDS;
-import static com.intfinit.earthquakes.dao.entity.fixture.EarthquakeRecordFixture.buildEarthquakeRecord;
 import static com.intfinit.earthquakes.dao.entity.fixture.EarthquakeRecordFixture.buildEarthquakeDataList;
+import static com.intfinit.earthquakes.dao.entity.fixture.EarthquakeRecordFixture.buildEarthquakeRecord;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -39,12 +39,6 @@ public class EarthquakeRecordDaoTest {
         ar.getApplication().getInjector().injectMembers(this);
         transaction = em.getTransaction();
         transaction.begin();
-    }
-
-    private void cleanTable() {
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM EarthquakeRecord").executeUpdate();
-        em.getTransaction().commit();
     }
 
     @After
@@ -78,7 +72,7 @@ public class EarthquakeRecordDaoTest {
         earthquakeRecordDao.save(earthquakeRecord);
 
         Optional<EarthquakeRecord> earthquakeRecordOptional = earthquakeRecordDao.findByNaturalId(earthquakeRecord);
-        checkEarquakeRecord(earthquakeRecord, earthquakeRecordOptional.get());
+        checkEarquakeRecord(earthquakeRecord, earthquakeRecordOptional.orElseThrow(IllegalStateException::new));
     }
 
     @Test
@@ -97,9 +91,7 @@ public class EarthquakeRecordDaoTest {
         earthquakeRecordDao.save(earthquakeRecord1);
         EarthquakeRecord earthquakeRecord2 = buildEarthquakeRecord();
         assertThatExceptionOfType(PersistenceException.class)
-                .isThrownBy(() -> {
-                    earthquakeRecordDao.save(earthquakeRecord2);
-                });
+                .isThrownBy(() -> earthquakeRecordDao.save(earthquakeRecord2));
     }
 
     @Test

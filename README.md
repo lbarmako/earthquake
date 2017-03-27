@@ -63,4 +63,4 @@ Flyway migrations and rollbacks happen in there.
 
 # Docker locally
 ## Dont stop containers after build
-Add property `-P docker-compose.dontStopContainers` to keep your Mysql & SFTP docker containers open after a test run
+Add property `-P docker-compose.dontStopContainers` to keep your Mysql docker container open after a test run.

@@ -23,8 +23,8 @@ public class EarthquakeRecordService {
     private static final Logger LOG = LoggerFactory.getLogger(EarthquakeRecordService.class);
 
     private final EarthquakeRecordModelToRecordTransformer earthquakeRecordModelToRecordTransformer;
-    private EarthquakeRecordDao earthquakeRecordDao;
-    private EarthquakeRecordListToResponseTransformer earthquakeRecordListToResponseTransformer;
+    private final EarthquakeRecordDao earthquakeRecordDao;
+    private final EarthquakeRecordListToResponseTransformer earthquakeRecordListToResponseTransformer;
 
     @Inject
     public EarthquakeRecordService(EarthquakeRecordDao earthquakeRecordDao,

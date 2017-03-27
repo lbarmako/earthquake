@@ -13,8 +13,7 @@ All other users will only be able to get the list of recent earthquakes.
 
 
 # TODOs
-- Ideally I would've liked to add unit tests for _EarthquakeRecordService_, _EarthquakeResource_ 
-as well as authentication classes.
+- Ideally I would've liked to add unit tests for _EarthquakeResource_ as well as authentication classes.
 - Add Java client so clients would not have to call rest api directly.
 - Add exception mappers.
 - Add performance and health metrics

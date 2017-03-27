@@ -1,9 +1,9 @@
 package com.intfinit.earthquakes.auth;
 
-import com.google.common.collect.Lists;
-
 import java.security.Principal;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class SimplePrincipal implements Principal {
 
@@ -13,7 +13,7 @@ public class SimplePrincipal implements Principal {
 
     public SimplePrincipal(String username) {
         this.username = username;
-        this.roles = Lists.newArrayList();
+        this.roles = newArrayList();
     }
 
     @Override
